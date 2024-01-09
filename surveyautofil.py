@@ -1,8 +1,8 @@
-import tkinter as tk
-from tkinter import messagebox
+import requests
 from bs4 import BeautifulSoup
 import random
-import requests
+import tkinter as tk
+from tkinter import messagebox
 
 def auto_fill_survey_multiple_choice(url):
     # Fetch the survey form
@@ -67,7 +67,7 @@ root.title("Survey Auto-Filler")
 url_label = tk.Label(root, text="Survey URL:")
 url_label.pack()
 
-url_entry = tk.Entry(root)
+url_entry = tk.Entry(root, width=50)  # Set the width to 50
 url_entry.pack()
 
 # Run button
