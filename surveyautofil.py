@@ -1,4 +1,6 @@
+import time
 from selenium import webdriver
+from selenium.webdriver.edge.service import Service
 from selenium.webdriver.common.keys import Keys
 import random
 import tkinter as tk
@@ -6,16 +8,36 @@ from tkinter import ttk
 from ttkthemes import ThemedTk, ThemedStyle
 import datetime
 from tkinter import messagebox
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+
+def check_submission(driver):
+    # Wait for the success element or text to be present on the page
+    try:
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, 'element_or_text_indicating_success')))
+        print("Survey submitted successfully.")
+        return True
+    except:
+        print("Failed to submit the survey.")
+        return False
 
 def auto_fill_survey(url):
-    # Create a new instance of the Firefox driver
-    driver = webdriver.Firefox(executable_path='C:/Users/jeff/OneDrive/Documents/geckodriver')
+    # Create a new instance of the Edge driver
+    driver = webdriver.Edge(service=Service('C:/Temp/surveyformautofill/msedgedriver.exe'))  # Replace with the path to your Edge driver
 
     # Go to the page that we want to scrape
     driver.get(url)
 
-    # Locate the form in the HTML
-    form = driver.find_element_by_tag_name('form')
+    try:
+        # Wait for the form to be present on the page
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.TAG_NAME, 'form')))
+        # Locate the form in the HTML
+        form = driver.find_element_by_tag_name('form')
+    except:
+        print("Failed to find form. Page source:")
+        print(driver.page_source)
+        return
 
     # Check if the form exists
     if form is None:
@@ -49,14 +71,11 @@ def auto_fill_survey(url):
     # Submit the form
     form.submit()
 
-    # Wait for the page to load
-    driver.implicitly_wait(5)  # seconds
-
     # Check if the form was submitted successfully
-    if "success" in driver.page_source.lower():
-        print("Survey submitted successfully.")
+    if check_submission(driver):
+        messagebox.showinfo("Success", "Survey submitted successfully.")
     else:
-        print("Failed to submit the survey.")
+        messagebox.showerror("Error", "Failed to submit the survey.")
 
     # Close the browser
     driver.quit()
@@ -65,7 +84,6 @@ def run_script():
     url = url_entry.get()
     try:
         auto_fill_survey(url)
-        messagebox.showinfo("Success", "Survey submitted successfully.")
     except Exception as e:
         messagebox.showerror("Error", str(e))
 
