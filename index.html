@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survey Automation</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+        }
+        form {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Survey Automation</h1>
+    <form action="/submit" method="post">
+        <label for="survey_url">Survey URL:</label>
+        <input type="text" id="survey_url" name="survey_url" value="{{ survey_url }}" required>
+        <button type="submit">Run</button>
+    </form>
+    <form action="/delete" method="get">
+        <button type="submit">Delete URL</button>
+    </form>
+</body>
+</html>
